@@ -29,3 +29,5 @@ print(is_palindrome("dad"))     # True
 print(is_palindrome("table"))   # False
 print(is_palindrome("texture"))  # False
 print(is_palindrome("glass"))   # False
+
+
