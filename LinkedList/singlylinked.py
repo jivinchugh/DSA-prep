@@ -1,6 +1,4 @@
-class SinglyLinked:
-    
-    # Inner Node class
+class SinglyLinkedList:
     class Node:
         def __init__(self, data, next=None):
             self.data = data
@@ -12,106 +10,158 @@ class SinglyLinked:
         def get_next(self):
             return self.next
 
-    # Singly Linked List constructor
     def __init__(self):
-        self.front = None  # Points to the first node
+        self.front = None
+        self.back = None
 
-    # Get the front node
     def get_front(self):
         return self.front
 
-    ### Insert Functions ###
+    def get_back(self):
+        return self.back
 
-    # Insert at the front
     def push_front(self, data):
-        newnode = self.Node(data, next=self.front)
-        self.front = newnode
+        new_node = self.Node(data, next=self.front)
+        if self.front is None:
+            self.back = new_node
+        self.front = new_node
 
-    # Insert at the back
     def push_back(self, data):
-        newnode = self.Node(data)
-        if self.front is None:  # If the list is empty
-            self.front = newnode
+        new_node = self.Node(data)
+        if self.back is None:
+            self.front = new_node
         else:
-            current = self.front
-            while current.get_next():
-                current = current.get_next()
-            current.next = newnode
+            self.back.next = new_node
+        self.back = new_node
 
-    ### Delete Functions ###
-
-    # Remove the front element
     def pop_front(self):
         if self.front is None:
             raise IndexError("pop_front() used on empty list")
         else:
             remove = self.front
             removed_data = remove.get_data()
-            self.front = self.front.get_next()
+            self.front = self.front.next
+            if self.front is None:  # If the list becomes empty
+                self.back = None
             del remove
             return removed_data
 
-    # Remove the back element
     def pop_back(self):
-        if self.front is None:
+        if self.back is None:
             raise IndexError("pop_back() used on empty list")
-        elif self.front.get_next() is None:  # Only one element
-            remove = self.front
-            removed_data = remove.get_data()
-            self.front = None
-            del remove
-            return removed_data
         else:
             current = self.front
-            prev = None
-            while current.get_next():  # Traverse to the last node
-                prev = current
-                current = current.get_next()
-            removed_data = current.get_data()
-            prev.next = None  # Remove the last node
-            del current
+            while current.next != self.back:  # Traverse to the second last node
+                current = current.next
+            removed_data = self.back.get_data()
+            current.next = None  # Remove the last node
+            self.back = current
+            if self.back is None:  # If the list becomes empty
+                self.front = None
             return removed_data
 
-    ### Search Function ###
-
-    # Search for a value and return True if found
-    def search_value(self, value):
+    def __str__(self):
+        elements = []
         current = self.front
         while current:
-            if current.get_data() == value:
-                return True
+            elements.append(current.get_data())
             current = current.get_next()
-        return False
+        return " -> ".join(map(str, elements))
 
-    ### Traverse Function ###
 
-    # Print all elements in the list
-    def traverse(self):
+class Sentinel:
+    class Node:
+        def __init__(self, data, next=None):
+            self.data = data
+            self.next = next
+
+        def get_data(self):
+            return self.data
+
+        def get_next(self):
+            return self.next
+
+    def __init__(self):
+        self.front = self.Node(None)  # Sentinel front node
+        self.back = self.Node(None)    # Sentinel back node
+        self.front.next = self.back     # Connect front to back
+
+    def get_front(self):
+        if self.front.next == self.back:
+            return None
+        else:
+            return self.front.next
+
+    def get_back(self):
+        if self.back.data is None:
+            return None
+        else:
+            current = self.front
+            while current.next != self.back:
+                current = current.next
+            return current
+
+    def push_front(self, data):
+        new_node = self.Node(data, self.front.next)
+        self.front.next = new_node
+
+    def push_back(self, data):
+        new_node = self.Node(data)
         current = self.front
-        while current:
-            print(current.get_data(), end=" -> ")
+        while current.next != self.back:
+            current = current.next
+        current.next = new_node
+        new_node.next = self.back
+
+    def pop_front(self):
+        if self.front.next == self.back:
+            raise IndexError("pop_front() used on empty list")
+        else:
+            remove = self.front.next
+            self.front.next = remove.next
+            del remove
+            return remove.get_data()
+
+    def pop_back(self):
+        if self.front.next == self.back:
+            raise IndexError("pop_back() used on empty list")
+        else:
+            current = self.front
+            while current.next != self.back:
+                current = current.next
+            remove = current.next
+            current.next = self.back
+            del remove
+            return remove.get_data()
+
+    def __str__(self):
+        elements = []
+        current = self.front.next
+        while current != self.back:
+            elements.append(current.get_data())
             current = current.get_next()
-        print("None")  # Indicates the end of the list
+        return " -> ".join(map(str, elements))
 
 
-sll = SinglyLinked()
+# Example Usage
+if __name__ == "__main__":
+    # Using SinglyLinkedList
+    sll = SinglyLinkedList()
+    sll.push_front(10)
+    sll.push_front(20)
+    sll.push_back(30)
+    print("Singly Linked List:", sll)
+    print("Pop Front:", sll.pop_front())
+    print("After Pop Front:", sll)
+    print("Pop Back:", sll.pop_back())
+    print("After Pop Back:", sll)
 
-# Insert at front and back
-sll.push_front(10)
-sll.push_back(20)
-sll.push_back(30)
-
-# Traverse the list
-sll.traverse()  # Output: 10 -> 20 -> 30 -> None
-
-# Pop front
-sll.pop_front()  # Removes 10
-sll.traverse()   # Output: 20 -> 30 -> None
-
-# Pop back
-sll.pop_back()   # Removes 30
-sll.traverse()   # Output: 20 -> None
-
-# Search for value
-print(sll.search_value(20))  # Output: True
-print(sll.search_value(40))  # Output: False
+    # Using Sentinel
+    sentinel_list = Sentinel()
+    sentinel_list.push_back(10)
+    sentinel_list.push_back(20)
+    print("Sentinel Linked List:", sentinel_list)
+    print("Pop Front:", sentinel_list.pop_front())
+    print("After Pop Front:", sentinel_list)
+    print("Pop Back:", sentinel_list.pop_back())
+    print("After Pop Back:", sentinel_list)
