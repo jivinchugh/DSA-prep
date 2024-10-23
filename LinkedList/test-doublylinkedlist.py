@@ -1,6 +1,6 @@
 
 import unittest
-from linkedlist import DoublyLinked, Sentinel
+from LinkedList.doublylinkedlist import DoublyLinked, Sentinel
 
 class Lab3TestCase(unittest.TestCase):
 	"""These are the test cases for functions and classes of a1"""
