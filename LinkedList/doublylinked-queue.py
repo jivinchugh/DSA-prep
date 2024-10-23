@@ -1,4 +1,4 @@
-class StackDoublyLinkedList:
+class QueueDoublyLinkedList:
 
     class Node:
         def __init__(self, data, next=None, prev=None):
@@ -7,39 +7,46 @@ class StackDoublyLinkedList:
             self.prev = prev
 
     def __init__(self):
-        self.top = None  # Points to the top element of the stack
+        self.front = None  # Points to the front of the queue
+        self.rear = None   # Points to the rear of the queue
 
-    # Push an element onto the stack
-    def push(self, data):
-        new_node = self.Node(data, next=self.top)
-        if self.top is not None:
-            self.top.prev = new_node  # Update the previous top node's previous link
-        self.top = new_node  # Update the top to the new node
+    # Enqueue (add) an element to the rear of the queue
+    def enqueue(self, data):
+        new_node = self.Node(data)
+        if self.rear is None:  # If the queue is empty
+            self.front = new_node
+            self.rear = new_node
+        else:
+            new_node.prev = self.rear  # Link the new node to the last node
+            self.rear.next = new_node  # Update the last node's next link
+            self.rear = new_node  # Move rear to the new node
 
-    # Pop an element from the stack
-    def pop(self):
-        if self.top is None:
-            raise IndexError("pop() from an empty stack")
-        removed_data = self.top.data
-        self.top = self.top.next  # Move the top pointer to the next node
-        if self.top is not None:
-            self.top.prev = None  # Update the new top's previous link
+    # Dequeue (remove) an element from the front of the queue
+    def dequeue(self):
+        if self.front is None:
+            raise IndexError("dequeue() from an empty queue")
+        removed_data = self.front.data
+        self.front = self.front.next  # Move front to the next node
+        if self.front is not None:
+            self.front.prev = None  # Update the new front's previous link
+        else:
+            self.rear = None  # If the queue becomes empty, set rear to None
         return removed_data
 
-    # Peek at the top element without removing it
+    # Peek at the front element without removing it
     def peek(self):
-        if self.top is None:
-            raise IndexError("peek() from an empty stack")
-        return self.top.data
+        if self.front is None:
+            raise IndexError("peek() from an empty queue")
+        return self.front.data
 
-    # Check if the stack is empty
+    # Check if the queue is empty
     def is_empty(self):
-        return self.top is None
+        return self.front is None
 
-    # Traverse the stack (print all elements)
+    # Traverse the queue (print all elements)
     def traverse(self):
-        current = self.top
+        current = self.front
         while current:
             print(current.data, end=" -> ")
             current = current.next
-        print("None")  # Indicates the end of the stack
+        print("None")  # Indicates the end of the queue
