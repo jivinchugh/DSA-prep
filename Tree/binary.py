@@ -8,15 +8,15 @@ class Node:
         self.data = data
         self.children = [] # Cannot be more than two elements
 
-    def add_node(self, data):
+    def add_child(self, data):
         if len(self.children) < 2:
             self.children.append(Node(data))
             self.children.sort(key=lambda n: n.data) # Just so they're in order
         else:
             if data < self.children[0].data:
-                self.children[0].add_node(data)
+                self.children[0].add_child(data)
             elif data > self.children[1].data:
-                self.children[1].add_node(data)
+                self.children[1].add_child(data)
             else:
                 return # do nothing as the node already exists in the tree
 
@@ -38,8 +38,8 @@ class BinaryTree:
     def __init__(self, data):
         self.root = Node(data)
 
-    def add_child(self, data):
-        self.root.add_node(data)
+    def add_node(self, data):
+        self.root.add_child(data)
 
     def display(self):
         self.root.display()
@@ -48,19 +48,19 @@ class BinaryTree:
 
 if __name__ == "__main__":
     tree = BinaryTree(5)
-    tree.add_child(8)
-    tree.add_child(7)
-    tree.add_child(9)
-    tree.add_child(4)
-    tree.add_child(-1)
-    tree.add_child(10)
-    tree.add_child(11)
-    tree.add_child(12)
-    tree.add_child(13)
-    tree.add_child(14)
-    tree.add_child(15)
-    tree.add_child(5)
-    tree.add_child(-2)
-    tree.add_child(-3)
-    tree.add_child(6)
+    tree.add_node(8)
+    tree.add_node(7)
+    tree.add_node(9)
+    tree.add_node(4)
+    tree.add_node(-1)
+    tree.add_node(10)
+    tree.add_node(11)
+    tree.add_node(12)
+    tree.add_node(13)
+    tree.add_node(14)
+    tree.add_node(15)
+    tree.add_node(5)
+    tree.add_node(-2)
+    tree.add_node(-3)
+    tree.add_node(6)
     tree.display()
